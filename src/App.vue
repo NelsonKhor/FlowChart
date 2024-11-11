@@ -1,76 +1,37 @@
 <script setup>
 import { ref } from 'vue'
-import { VueFlow } from '@vue-flow/core'
-
+import { VueFlow, useVueFlow, Panel } from '@vue-flow/core'
 import SpecialNode from './components/SpecialNode.vue'
-import SpecialEdge from './components/SpecialEdge.vue'
 
 // these are our nodes
 const nodes = ref([
   { 
-    id: '1',
-    type: 'input', 
-    position: { x: 250, y: 5 },
+    id: '1', 
+    position: { x: 50, y: 50 },
     data: { label: 'Node 1' },
-  },
-  { 
-    id: '2', 
-    position: { x: 100, y: 100 },
-    data: { label: 'Node 2' },
-  },
-  { 
-    id: '3', 
-    type: 'output', 
-    position: { x: 400, y: 200 },
-    data: { label: 'Node 3' },
-  },
-  {
-    id: '4',
-    type: 'special',
-    position: { x: 400, y: 200 },
-    data: {
-      label: 'Node 4',
-      hello: 'world',
-    },
   },
 ])
 
-// these are our edges
-const edges = ref([
-  { 
-    id: 'e1->2',
-    source: '1', 
-    target: '2',
-  },
-  { 
-    id: 'e2->3',
-    source: '2', 
-    target: '3', 
-    animated: true,
-  },
-  {
-    id: 'e3->4',
-    type: 'special',
-    source: '3',
-    target: '4',
-    data: {
-      hello: 'world',
-    }
-  },
-])
+// Create node function
+function createNode() {
+  // Generate Id
+  const newNodeId = `${nodes.value.length + 1}`
+  nodes.value.push({
+    id: newNodeId,
+    type: 'default',
+    position: {x: 400, y: 400},
+    data: { label: `Node ${newNodeId}`}
+  })
+}
 </script>
 
 <template>
-  <div style="width: 100vw; height: 100vh">
+  <div style="width: 500px; height: 500px">
+    <button @click="createNode">Create Node</button>
     <VueFlow :nodes="nodes" :edges="edges">
       <!-- bind your custom node type to a component by using slots, slot names are always `node-<type>` -->
       <template #node-special="specialNodeProps">
         <SpecialNode v-bind="specialNodeProps" />
-      </template>
-
-      <!-- bind your custom edge type to a component by using slots, slot names are always `edge-<type>` -->
-      <template #edge-special="specialEdgeProps">
-        <SpecialEdge v-bind="specialEdgeProps" />
       </template>
     </VueFlow>
 </div>
